@@ -216,6 +216,16 @@ Available at: **[paolodegidio.gumroad.com/l/cortex-homelab](https://paolodegidio
 
 ---
 
+---
+
+## Articles & Resources
+
+- **Dev.to:** [How to get individual SMART data from a TerraMaster DAS (and build a failure forecaster around it)](https://dev.to/pdegidio)
+
+## Related Projects
+
+- **[Cortex](https://github.com/pdegidio/cortex-homelab)** — AI-powered log monitor for *arr stacks. Local LLM reads your Docker logs, filters noise, sends daily digests via ntfy. Runs on the same machine, zero conflicts.
+
 ## Contributing
 
 Issues and pull requests are welcome. If Argus saves a disk for you, consider starring the repo.
