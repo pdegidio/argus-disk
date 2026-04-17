@@ -1,0 +1,30 @@
+# Argus — gitignore
+
+# Real config (may contain ntfy tokens)
+config/argus.conf
+
+# Data files
+*.json
+*.json.tmp
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Distribution
+*.zip
+*.tar.gz
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db

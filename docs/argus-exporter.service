@@ -1,0 +1,61 @@
+# argus-exporter.service
+# Systemd unit for the Argus Prometheus metrics exporter
+#
+# Installation:
+#   sudo cp docs/argus-exporter.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable argus-exporter
+#   sudo systemctl start argus-exporter
+#
+# Check status:
+#   sudo systemctl status argus-exporter
+#   journalctl -u argus-exporter -f
+
+[Unit]
+Description=Argus Predictive Disk Monitor — Prometheus Exporter
+Documentation=https://github.com/pdegidio/argus-disk
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=argus
+Group=argus
+
+ExecStart=/usr/bin/python3 /opt/argus/scripts/argus-exporter.py \
+    --config /opt/argus/config/argus.conf
+
+Restart=on-failure
+RestartSec=10s
+StartLimitInterval=60s
+StartLimitBurst=5
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=argus-exporter
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/argus
+PrivateTmp=true
+PrivateDevices=false   # needs access to /dev/sd* for smartctl
+MemoryMax=64M
+CPUQuota=10%
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
+
+
+# ============================================================
+#  Notes on the 'argus' user
+#
+#  sudo useradd --system --no-create-home --shell /usr/sbin/nologin argus
+#  sudo mkdir -p /var/lib/argus /opt/argus
+#  sudo chown -R argus:argus /var/lib/argus /opt/argus
+#
+#  smartctl requires root OR the disk group. Add argus to disk group:
+#  sudo usermod -aG disk argus
+# ============================================================

@@ -1,0 +1,102 @@
+# =============================================================
+#  Argus — Predictive Disk Health Monitor
+#  Configuration file
+#
+#  Copy this file to /opt/argus/config/argus.conf and edit it.
+#  Argus will not start without at least one [disk:alias] section.
+# =============================================================
+
+# ─── General settings ────────────────────────────────────────
+[argus]
+
+# Where to store SMART history (JSON). Needs write access.
+history_file = /var/lib/argus/argus-history.json
+
+# Where to store watcher state (last known status per disk)
+state_file = /var/lib/argus/argus-state.json
+
+# How many days of SMART history to retain
+# At 6h collection frequency: 180d = ~720 samples per disk
+retention_days = 180
+
+# ─── ntfy notifications ──────────────────────────────────────
+[ntfy]
+
+# Base URL of your ntfy instance (self-hosted or ntfy.sh)
+# Leave blank to disable notifications
+url = http://your-ntfy-instance:8080
+
+# Topic to publish to
+topic = argus-disk
+
+# Optional: Bearer token for authenticated ntfy instances
+# token = your_ntfy_token_here
+
+# ─── Prometheus exporter ─────────────────────────────────────
+[prometheus]
+
+# Port for the Prometheus metrics exporter (argus-exporter.py)
+port = 9193
+
+# ─── Disk definitions ────────────────────────────────────────
+# Define one [disk:alias] section per disk (or per DAS slot).
+# alias  = short name used in alerts and metrics (no spaces)
+# device = block device path (e.g. /dev/sda)
+# type   = smartctl -d argument (see below)
+# class  = hdd | ssd (affects thresholds)
+#
+# Common type values:
+#   sat         — SATA disk connected directly or via USB-SATA adapter
+#   scsi        — SCSI/SAS disk
+#   nvme        — NVMe SSD
+#   jmb39x,N    — DAS enclosure with JMicron JMB576 controller (N=0..4)
+#                 Used by: TerraMaster D5-300, some ORICO enclosures
+#   auto        — let smartctl detect automatically (less reliable)
+#
+# Examples:
+# ──────────────────────────────────────────────────────────────
+
+# Single SATA SSD (system drive)
+[disk:ssd-system]
+device = /dev/sda
+type   = sat
+class  = ssd
+
+# Single SATA HDD
+[disk:hdd-data]
+device = /dev/sdb
+type   = sat
+class  = hdd
+
+# DAS enclosure with JMicron JMB576 (e.g. TerraMaster D5-300)
+# Uncomment and repeat for each slot (0 through 4 for a 5-bay enclosure)
+# [disk:das-slot1]
+# device = /dev/sdb
+# type   = jmb39x,0
+# class  = hdd
+#
+# [disk:das-slot2]
+# device = /dev/sdb
+# type   = jmb39x,1
+# class  = hdd
+#
+# [disk:das-slot3]
+# device = /dev/sdb
+# type   = jmb39x,2
+# class  = hdd
+#
+# [disk:das-slot4]
+# device = /dev/sdb
+# type   = jmb39x,3
+# class  = hdd
+#
+# [disk:das-slot5]
+# device = /dev/sdb
+# type   = jmb39x,4
+# class  = hdd
+
+# NVMe SSD
+# [disk:nvme-boot]
+# device = /dev/nvme0
+# type   = nvme
+# class  = ssd
